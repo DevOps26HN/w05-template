@@ -1,4 +1,4 @@
-# DevOps W04 In-Class Exercise Template
+# DevOps W05 In-Class Exercise Template
 
 This repository contains a full-stack application with a SvelteKit client and a Spring Boot server. It demonstrates modern web application architecture and DevOps practices.
 
@@ -22,8 +22,8 @@ This project includes:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/w04-template.git
-cd w04-template
+git clone https://github.com/yourusername/w05-template.git
+cd w05-template
 ```
 
 ### Client Setup
