@@ -1,0 +1,68 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+
+name: Build and deploy to Azure Kubernetes Service
+
+env:
+  PROJECT_NAME: "w05"              # set this to your project's name
+  RESOURCE_GROUP: ${{ vars.MY_RESOURCE_GROUP }}          # set this to the resource group containing your AKS cluster
+  CLUSTER_NAME: ${{ vars.MY_CLUSTER_NAME }}     # set this to the name of your AKS cluster
+  # If you bake using helm:
+  CHART_PATH: "helm/canteen-app/"                   # set this to the path to your helm file
+  CHART_OVERRIDE_PATH: "helm/canteen-app/values.yaml"     # set this to an array of override file paths
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: AZURE
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Azure login
+      uses: azure/login@v3
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        enable-AzPSSession: true
+
+    - name: Gets K8s context
+      uses: azure/aks-set-context@v2
+      with:
+        resource-group: ${{ env.RESOURCE_GROUP }}
+        cluster-name: ${{ env.CLUSTER_NAME }}
+      id: login
+
+    - name: Configure deployment
+      uses: azure/k8s-bake@v3
+      with:
+        renderEngine: 'helm'
+        helmChart: ${{ env.CHART_PATH }}
+        overrideFiles: ${{ env.CHART_OVERRIDE_PATH }}
+        overrides: |
+          replicas:2
+        helm-version: 'latest'
+      id: bake
+
+    - name: Ensure namespace exists
+      run: | 
+        kubectl create namespace go67yja-devops26 --dry-run=client -o yaml | kubectl apply -f -
+
+    - name: Deploys application
+      uses: Azure/k8s-deploy@v5
+      with:
+        namespace: 'go67yja-devops26'
+        manifests: ${{ steps.bake.outputs.manifestsBundle }}

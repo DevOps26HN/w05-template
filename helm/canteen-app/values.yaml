@@ -1,7 +1,7 @@
 # This file contains the default values for the Canteen App Helm chart.
 
 # Add your tumid here
-tumid:
+tumid: go67yja
 
 ##################################################################################################################
 # No changes needed below this line
@@ -35,7 +35,22 @@ client:
 
 ingress:
   enabled: true
-  className: "nginx"
-  tls: true
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  className: "ingress-appgateway-appgwpip"
+
+  hosts:
+    - host: your_ip  # You can use your App Gateway's Public IP here
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: client-service  # Ensure this matches your client service name
+              port:
+                number: 80
+        - path: /api
+          pathType: Prefix
+          backend:
+            service:
+              name: server-service  # Ensure this matches your server service name
+              port:
+                number: 8080
