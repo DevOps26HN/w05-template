@@ -10,7 +10,7 @@ namespace:
 
 server:
   image:
-    repository: ghcr.io/aet-devops26/w04-template/server
+    repository: ghcr.io/devops26hn/w05-template/server
     tag: latest
     pullPolicy: Always
   service:
@@ -24,7 +24,7 @@ server:
 
 client:
   image:
-    repository: ghcr.io/aet-devops26/w04-template/client
+    repository: ghcr.io/devops26hn/w05-template/client
     tag: latest
     pullPolicy: Always
   service:
