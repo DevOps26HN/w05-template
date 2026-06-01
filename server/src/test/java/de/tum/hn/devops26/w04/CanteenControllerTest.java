@@ -58,7 +58,7 @@ public class CanteenControllerTest {
         when(restTemplate.getForObject(anyString(), eq(Week.class))).thenReturn(new Week(15, 2024, List.of()));
 
         // Act & Assert
-        getList("/{canteenName}/today", HttpStatus.NO_CONTENT, Dish.class, "mensa-garching");
+        getList("/api/{canteenName}/today", HttpStatus.NO_CONTENT, Dish.class, "mensa-garching");
     }
 
     @Test
@@ -79,7 +79,7 @@ public class CanteenControllerTest {
         when(restTemplate.getForObject(eq(expectedUrl), eq(Week.class))).thenReturn(expectedWeek);
 
         // Act
-        List<Dish> actualTodayDishes = getList("/{canteenName}/today", HttpStatus.OK, Dish.class, canteenName);
+        List<Dish> actualTodayDishes = getList("/api/{canteenName}/today", HttpStatus.OK, Dish.class, canteenName);
 
         // Assert
         assertThat(actualTodayDishes).hasSize(2);

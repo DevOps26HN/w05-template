@@ -10,6 +10,8 @@ spec:
       app: canteen-client-selector
   template:
     metadata:
+      annotations:
+        checksum/app-config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
         app: canteen-client-selector
     spec:

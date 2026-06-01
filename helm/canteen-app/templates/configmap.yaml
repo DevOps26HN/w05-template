@@ -4,4 +4,4 @@ metadata:
   name: app-config
   namespace: "{{ .Values.tumid }}-devops26"
 data:
-  api_url: "http://your_ip/api"
+  api_url: /api

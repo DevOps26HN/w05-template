@@ -23,7 +23,7 @@ public class CanteenController {
      * @param canteenName the ID of the canteen
      * @return list of dishes available today at the specified canteen
      */
-    @GetMapping("/{canteenName}/today")
+    @GetMapping("/api/{canteenName}/today")
     public ResponseEntity<List<Dish>> getTodayMeals(@PathVariable String canteenName) {
         List<Dish> todayMeals = canteenService.getTodayMeals(canteenName);
         
